@@ -1,0 +1,80 @@
+---
+title: "R Markdowns"
+author: "Alex Kan -lexokan"
+date: "November 6, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+### Select 
+```{r}
+midwest
+df <- select(midwest, 2:27)
+
+states <- unique(select(midwest,state))
+states <- select(midwest, state) %>%
+    unique()
+
+```
+
+### Filter
+
+```{r}
+df <- filter(df, state == "IL", poptotal > 15000)
+
+plot(midwest$area, midwest$poptotal)
+
+df <- filter(df, poptotal < 1000000)
+plot(df$area, df$poptotal)
+
+```
+
+### Mutate and Arrange 
+
+```{r}
+df[,17:19]
+select(df, 17:19)
+
+df <- df %>%
+    mutate(pernodegree = (100 - perchsd) / 100) %>% 
+    arrange(desc(pernodegree))
+
+df
+```
+
+### Group_by and Summarise
+```{r}
+midwest %>% 
+    group_by(state) %>% 
+    summarise(avg_pop = mean(poptotal), median_pop = median(poptotal))
+```
+
+### Regression 
+```{r}
+mod <- lm(data = df, percbelowpoverty~pernodegree)
+
+plt <- ggplot(data = df, aes(pernodegree, percbelowpoverty)) +
+    geom_point(color = 'red') +
+    geom_smooth(method = 'lm', se = FALSE)
+plt
+
+plt <- plt + labs(title = "Poverty by Education", 
+                  x = "% without degree",
+                  y = "% below poverty")
+plt
+
+```
+
+
+```{r}
+
+read_csv(url("http://ryanthornburg.com/wp-content/uploads/2015/05/UNC_Salares_NandO_2015-05-06.csv"))
+
+guns <- read_csv("guns.csv")
+
+```
+
+
